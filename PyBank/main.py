@@ -56,9 +56,7 @@ relativePath = "resources/budget_data.csv"
 
 print(dirname + relativePath)
 
-fullpath = os.path.join(os.path.dirname(__file__), relativePath)
-
-print("Full Path: ", fullpath)
+fullpath = os.path.join(os.path.dirname(__file__), "Resources", "budget_data.csv")
 
 
 
