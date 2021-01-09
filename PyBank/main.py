@@ -48,8 +48,7 @@ with open(InputFile) as csv_file:
 
 
 
-Month_Delta.append(0)  #populate a zero to the first month's (Month_Delta[0]) change column
-
+Month_Delta.append(0)  #populate a zero to the first month's (Month_Delta[0]) change column. NaN would probably be more appropriate but that generates a type clash when using summary functions.
 
 for i in range(1,len(PnLNOI)):
     Month_Delta.append((PnLNOI[i]) - (PnLNOI[i-1]))
