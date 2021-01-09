@@ -18,7 +18,6 @@
 #import modules needed to read csv and write to file
 import os
 import csv
-import sys
 
 #Define input and output filenames for later use
 InputFile = os.path.join(os.path.dirname(__file__), "Resources", "budget_data.csv")
@@ -48,25 +47,25 @@ with open(InputFile) as csv_file:
             line_count += 1
 
 
-Delta_Count = len(PnLNOI)-1
+
 Month_Delta.append(0)  #populate a zero to the first month's (Month_Delta[0]) change column
 
-#Shift iteration values by one to account for no change value in month zero
+
 for i in range(1,len(PnLNOI)):
     Month_Delta.append((PnLNOI[i]) - (PnLNOI[i-1]))
     
 ###Summary stats
 Total_month_cnt = len(PnLMonth)
 Total_NOI = sum(PnLNOI)
+Delta_Count = len(PnLNOI)-1
 Total_Delta = sum(Month_Delta)
 Average_Delta = Total_Delta/(Delta_Count)
 Max_Delta = max(Month_Delta)
 Min_Delta = min(Month_Delta)
 
 #return indices of most improved and most deteriorated months
-
 Max_Index = Month_Delta.index(Max_Delta) 
-Min_Index = Month_Delta.index(Min_Delta)
+Min_Index = Month_Delta.index(Min_Delta) 
 
 #return month values associated with greatest and least deltas
 Max_Delta_Month = PnLMonth[Max_Index]
@@ -74,15 +73,7 @@ Min_Delta_Month = PnLMonth[Min_Index]
 
 
 #Final output... 
-   #Redirect stdout to file "PnL_summary.txt" and also  to terminal
-   #Note: stdout redirect requires sys module to be imported, but allows script to calculate over file only once
-   #Source: Method for redirect acquired from https://www.askpython.com/python/built-in-methods/python--to-file (Retrieved 2021-01-06)
-
-
-# Save the current stdout so that we can revert sys.stdout after we complete
-# our redirection
-stdout_fileno = sys.stdout
-
+#Construct list of f-strings for printing to file and screen (allows the variables to be reused in both output streams, instead of calculating over the input file twice)
 Output_Text = [
                 "Financial Analysis",
                 "----------------------------",
@@ -94,17 +85,14 @@ Output_Text = [
                 f'Greatest Decrease in Profits:  {Min_Delta_Month} ({Min_Delta})',
               ]
 
-#Redirect sys.stdout to the file
-sys.stdout = open(OutputFile, 'w')
+f = open(OutputFile, 'w') 
 for each_line in Output_Text:
-    # Prints to the redirected stdout (Output.txt)
-    sys.stdout.write(each_line + '\n')
-    # Prints to the actual saved stdout handler
-    stdout_fileno.write(each_line + '\n')
+    # prints to output file
+    f.write(each_line + '\n')
+    # Prints to console
+    print(each_line)
 
 # Close the file
-sys.stdout.close()
-# Restore sys.stdout to our old saved file handler
-sys.stdout = stdout_fileno
+f.close()
 
 ##### End of script #####
