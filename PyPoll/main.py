@@ -27,15 +27,16 @@ import csv
 
 #Define input and output filenames for later use
 InputFile = os.path.join(os.path.dirname(__file__), "Resources", "election_data.csv")
-OutputFile = os.path.join(os.path.dirname(__file__), "Analysis", "election_results.txt")
+OutputFile = os.path.join(os.path.dirname(__file__), "analysis", "election_results.txt")
 
-
-# steps
 # Construct empty lists to bring in data, and dictionary for processing:
 Headers=[]
 IDs=[]
 Candidate=[]
 Votes={}
+Names = []
+Pct_of_Votes={}
+
 
 # Import id's into list; import votes into another list
   #read in data row-by-row. 
@@ -50,20 +51,10 @@ with open(InputFile) as csv_file:
             Headers.append(row[2])
             line_count += 1
         else:
-           #Append column 0 to IDs and column 2 to Candidate 
-#            IDs.append(row[0])
+           #Append column column 2 to Candidate 
             Candidate.append(row[2])
             line_count += 1
 
-# #Show the top ten lines in each list ####For testing, remove before submit
-# for i in range(0,9):
-#   print(f'ID: {IDs[i]} -- candidate: {Candidate[i]}')
-#   # Combine into dict with ID as key and candidate as value
-
-        # total nr votes cast = len(IDs)
-# print(f'Count: {len(Candidate)}')
-# Distinct_Candidate = list(dict.fromkeys(Candidate))
-# print(Distinct_Candidate)
 
 
 #Tally the votes: Look at candidate list, and count the number of times each candidate received a vote
@@ -73,10 +64,36 @@ for individual in Candidate:
   else:
     Votes[individual] += 1     #This is NOT the first occurrence of a unique candidate name, increment existing value by 1
 
+#Calculations: 
+
+Winner = max(Votes, key=Votes.get)
+
+Total_Vote_Count = sum(Votes.values())
 
 
-        # Complete list of candidates who received votes: list(dict.fromkeys(Candidate))
-        # Pct of votes per candidate
-        # Total votes per candidate
-        # Winner = Max(total votes)--> Candidate
-print(Votes)
+#Final output... 
+#Construct list of f-strings for printing to file and screen (allows the variables to be reused in both output streams, instead of calculating over the input file twice)
+Output_Text = [
+                "Election Results",
+                "-------------------------",
+                f'Total Votes: {Total_Vote_Count}',
+                "-------------------------"
+              ]
+
+for key, value in Votes.items():
+  Output_Text.append(f'{key}: {value/Total_Vote_Count:.3%} ({value})')
+
+Output_Text.append("-------------------------")
+Output_Text.append(f'Winner: {Winner}')
+Output_Text.append("-------------------------")
+
+f = open(OutputFile, 'w') 
+for each_line in Output_Text:
+    # prints to output file
+    f.write(each_line + '\n')
+    # Prints to console
+    print(each_line)
+
+# Close the file
+f.close()
+#####End of Script#####
