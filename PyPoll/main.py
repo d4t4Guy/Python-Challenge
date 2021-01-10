@@ -51,7 +51,7 @@ with open(InputFile) as csv_file:
             line_count += 1
         else:
            #Append column 0 to IDs and column 2 to Candidate 
-            IDs.append(row[0])
+#            IDs.append(row[0])
             Candidate.append(row[2])
             line_count += 1
 
@@ -59,9 +59,24 @@ with open(InputFile) as csv_file:
 # for i in range(0,9):
 #   print(f'ID: {IDs[i]} -- candidate: {Candidate[i]}')
 #   # Combine into dict with ID as key and candidate as value
-# print(f'Count: {len(Candidate)}')
+
         # total nr votes cast = len(IDs)
-        # Complete list of candidates who received votes: ??? - need to find out how to list distinct values in dict
+# print(f'Count: {len(Candidate)}')
+# Distinct_Candidate = list(dict.fromkeys(Candidate))
+# print(Distinct_Candidate)
+
+
+#Tally the votes: Look at candidate list, and count the number of times each candidate received a vote
+for individual in Candidate:
+  if individual not in Votes:  #This is the first occurence of a unique candidate name, add key to dict and set value = 1
+    Votes[individual] = 1
+  else:
+    Votes[individual] += 1     #This is NOT the first occurrence of a unique candidate name, increment existing value by 1
+
+
+
+        # Complete list of candidates who received votes: list(dict.fromkeys(Candidate))
         # Pct of votes per candidate
         # Total votes per candidate
         # Winner = Max(total votes)--> Candidate
+print(Votes)
